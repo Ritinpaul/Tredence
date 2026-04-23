@@ -1,0 +1,164 @@
+@import "tailwindcss";
+
+/* ───────────────────────────────────────────────
+   HR Workflow Designer — Design Tokens
+   ─────────────────────────────────────────────── */
+@theme {
+  /* Node type colors */
+  --color-node-start: #10b981;
+  --color-node-start-light: #d1fae5;
+  --color-node-start-border: #059669;
+
+  --color-node-task: #3b82f6;
+  --color-node-task-light: #dbeafe;
+  --color-node-task-border: #2563eb;
+
+  --color-node-approval: #f59e0b;
+  --color-node-approval-light: #fef3c7;
+  --color-node-approval-border: #d97706;
+
+  --color-node-automated: #8b5cf6;
+  --color-node-automated-light: #ede9fe;
+  --color-node-automated-border: #7c3aed;
+
+  --color-node-end: #f43f5e;
+  --color-node-end-light: #ffe4e6;
+  --color-node-end-border: #e11d48;
+
+  /* Surface */
+  --color-canvas-bg: #0f1117;
+  --color-surface-1: #1a1d27;
+  --color-surface-2: #22263a;
+  --color-surface-3: #2d3356;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.16);
+
+  /* Text */
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #475569;
+
+  /* Accent */
+  --color-accent: #6366f1;
+  --color-accent-hover: #4f46e5;
+
+  /* Fonts */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ───────────────────────────────────────────────
+   Base Reset
+   ─────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-canvas-bg);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ───────────────────────────────────────────────
+   React Flow overrides
+   ─────────────────────────────────────────────── */
+.react-flow__background {
+  background-color: var(--color-canvas-bg) !important;
+}
+
+.react-flow__minimap {
+  background-color: var(--color-surface-1) !important;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-strong);
+}
+
+.react-flow__controls {
+  background-color: var(--color-surface-1) !important;
+  border: 1px solid var(--color-border-strong) !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.react-flow__controls-button {
+  background-color: var(--color-surface-1) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text-secondary) !important;
+}
+
+.react-flow__controls-button:hover {
+  background-color: var(--color-surface-2) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.react-flow__edge-path {
+  stroke: #4f5882;
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: var(--color-accent);
+}
+
+.react-flow__edge-path-animated {
+  stroke-dasharray: 8;
+  animation: flow 0.8s linear infinite;
+}
+
+@keyframes flow {
+  from { stroke-dashoffset: 16; }
+  to   { stroke-dashoffset: 0; }
+}
+
+/* ───────────────────────────────────────────────
+   Node scale-in animation
+   ─────────────────────────────────────────────── */
+@keyframes nodeScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.node-enter {
+  animation: nodeScaleIn 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ───────────────────────────────────────────────
+   Config panel slide-in
+   ─────────────────────────────────────────────── */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ───────────────────────────────────────────────
+   Scrollbar styling
+   ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
