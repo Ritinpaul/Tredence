@@ -24,7 +24,7 @@ import { AutomatedNode } from './nodes/AutomatedNode'
 import { EndNode } from './nodes/EndNode'
 import { DRAG_TYPE, isWorkflowNodeType } from '../sidebar/PaletteItem'
 import { NODE_REGISTRY } from '../../lib/nodeRegistry'
-import { WorkflowNodeType, type WorkflowNode, type WorkflowEdge } from '../../types/workflow'
+import { WorkflowNodeType, type WorkflowNode, type WorkflowEdge, type ValidationError } from '../../types/workflow'
 
 // ── Node type map for React Flow ─────────────────────────────
 const nodeTypes = {
@@ -51,6 +51,7 @@ interface WorkflowCanvasProps {
   onConnect: (connection: Connection) => void
   onNodeSelect: (node: WorkflowNode | null) => void
   onAddNode: (node: WorkflowNode) => void
+  errors?: ValidationError[]
 }
 
 let nodeIdCounter = 1
@@ -67,9 +68,37 @@ export function WorkflowCanvas({
   onConnect,
   onNodeSelect,
   onAddNode,
+  errors = [],
 }: WorkflowCanvasProps) {
   const reactFlowWrapper = useRef<HTMLDivElement>(null)
   const { screenToFlowPosition } = useReactFlow()
+
+  // Inject errors into nodes
+  const nodesWithErrors = nodes.map(node => {
+    const nodeError = errors.find(e => e.nodeId === node.id && e.severity === 'error')
+    if (nodeError) {
+      return {
+        ...node,
+        data: {
+          ...node.data,
+          hasError: true,
+          errorMessage: nodeError.message
+        }
+      }
+    }
+    // ensure existing errors are cleared when resolved
+    if (node.data.hasError) {
+      return {
+        ...node,
+        data: {
+          ...node.data,
+          hasError: false,
+          errorMessage: undefined
+        }
+      }
+    }
+    return node
+  })
 
   // ── Drag over: allow drop ──────────────────────────────────
   const handleDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
@@ -107,7 +136,7 @@ export function WorkflowCanvas({
 
   // ── Connection validation ──────────────────────────────────
   const isValidConnection = useCallback(
-    (connection: Connection) => {
+    (connection: Connection | WorkflowEdge) => {
       const sourceNode = nodes.find((n) => n.id === connection.source)
       const targetNode = nodes.find((n) => n.id === connection.target)
 
@@ -144,7 +173,7 @@ export function WorkflowCanvas({
   return (
     <div ref={reactFlowWrapper} className="flex-1 h-full relative">
       <ReactFlow
-        nodes={nodes}
+        nodes={nodesWithErrors}
         edges={edges}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}

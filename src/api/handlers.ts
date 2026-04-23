@@ -19,7 +19,7 @@ export const handlers = [
 
     try {
       const payload = (await request.json()) as SimulationPayload
-      const { nodes, edges } = payload
+      const { nodes } = payload
 
       const steps: SimulationStep[] = []
       let hasError = false

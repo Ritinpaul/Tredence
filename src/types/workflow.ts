@@ -5,13 +5,15 @@
 import type { Node, Edge } from '@xyflow/react'
 
 // ── Node type enum ────────────────────────────────────────────
-export enum WorkflowNodeType {
-  Start     = 'start',
-  Task      = 'task',
-  Approval  = 'approval',
-  Automated = 'automated',
-  End       = 'end',
-}
+export const WorkflowNodeType = {
+  Start: 'start',
+  Task: 'task',
+  Approval: 'approval',
+  Automated: 'automated',
+  End: 'end',
+} as const
+
+export type WorkflowNodeType = typeof WorkflowNodeType[keyof typeof WorkflowNodeType]
 
 // ── Per-type NodeData shapes ──────────────────────────────────
 
@@ -21,14 +23,19 @@ export interface KeyValuePair {
   value: string
 }
 
-export interface StartNodeData {
-  type: WorkflowNodeType.Start
+export type BaseNodeData = Record<string, unknown> & {
+  hasError?: boolean
+  errorMessage?: string
+}
+
+export type StartNodeData = BaseNodeData & {
+  type: typeof WorkflowNodeType.Start
   title: string
   metadata: KeyValuePair[]
 }
 
-export interface TaskNodeData {
-  type: WorkflowNodeType.Task
+export type TaskNodeData = BaseNodeData & {
+  type: typeof WorkflowNodeType.Task
   title: string
   description: string
   assignee: string
@@ -36,23 +43,23 @@ export interface TaskNodeData {
   customFields: KeyValuePair[]
 }
 
-export interface ApprovalNodeData {
-  type: WorkflowNodeType.Approval
+export type ApprovalNodeData = BaseNodeData & {
+  type: typeof WorkflowNodeType.Approval
   title: string
   approverRole: 'Manager' | 'HRBP' | 'Director' | ''
   autoApproveThreshold: number
 }
 
-export interface AutomatedNodeData {
-  type: WorkflowNodeType.Automated
+export type AutomatedNodeData = BaseNodeData & {
+  type: typeof WorkflowNodeType.Automated
   title: string
   actionId: string
   /** Dynamic param values keyed by param name */
   paramValues: Record<string, string>
 }
 
-export interface EndNodeData {
-  type: WorkflowNodeType.End
+export type EndNodeData = BaseNodeData & {
+  type: typeof WorkflowNodeType.End
   title: string
   endMessage: string
   summaryFlag: boolean

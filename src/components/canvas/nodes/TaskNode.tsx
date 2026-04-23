@@ -16,6 +16,8 @@ export function TaskNode({ data, selected }: Props) {
       Icon={entry.Icon}
       colors={entry.colors}
       selected={selected}
+      hasError={data.hasError}
+      errorMessage={data.errorMessage}
       shape="rect"
     >
       {data.assignee && (

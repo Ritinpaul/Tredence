@@ -19,6 +19,7 @@ interface BaseNodeProps {
   }
   selected: boolean
   hasError?: boolean
+  errorMessage?: string
   shape?: 'pill' | 'rect' | 'diamond'
   showTargetHandle?: boolean
   showSourceHandle?: boolean
@@ -31,6 +32,7 @@ export function BaseNode({
   colors,
   selected,
   hasError = false,
+  errorMessage,
   shape = 'rect',
   showTargetHandle = true,
   showSourceHandle = true,
@@ -88,7 +90,7 @@ export function BaseNode({
       {/* Error indicator */}
       {hasError && (
         <div
-          title="Node has configuration errors"
+          title={errorMessage || "Node has configuration errors"}
           className="absolute -top-2 -right-2 bg-red-500 rounded-full p-0.5 animate-pulse"
         >
           <AlertTriangle size={11} className="text-white" />

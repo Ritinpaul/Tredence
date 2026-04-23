@@ -16,7 +16,9 @@ export function ApprovalNode({ data, selected }: Props) {
       Icon={entry.Icon}
       colors={entry.colors}
       selected={selected}
-      shape="rect"
+      hasError={data.hasError}
+      errorMessage={data.errorMessage}
+      shape="diamond"
     >
       {data.approverRole && (
         <p className="text-xs text-amber-400/70 mt-0.5">
